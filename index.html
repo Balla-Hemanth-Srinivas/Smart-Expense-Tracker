@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Track your income and expenses with this beautiful expense tracker. Visualize your spending with interactive charts.">
+    <title>ExpenseFlow - Smart Expense Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <span>ExpenseFlow</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-view="transactions">
+                    <i class="fas fa-list"></i>
+                    <span>Transactions</span>
+                </a>
+                <a href="#" class="nav-item" data-view="add">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="storage-info">
+                    <i class="fas fa-database"></i>
+                    <span>Data saved locally</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p id="currentDate"></p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline" id="exportBtn">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button class="btn btn-primary" id="addBtnHeader">
+                        <i class="fas fa-plus"></i>
+                        Add Transaction
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section class="view active" id="dashboardView">
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="card summary-card income">
+                        <div class="card-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="card-content">
+                            <p class="card-label">Total Income</p>
+                            <h2 class="card-value" id="totalIncome">₹0</h2>
+                        </div>
+                    </div>
+                    <div class="card summary-card expense">
+                        <div class="card-icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="card-content">
+                            <p class="card-label">Total Expenses</p>
+                            <h2 class="card-value" id="totalExpense">₹0</h2>
+                        </div>
+                    </div>
+                    <div class="card summary-card balance">
+                        <div class="card-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-content">
+                            <p class="card-label">Balance</p>
+                            <h2 class="card-value" id="balance">₹0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Expense Breakdown</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                            <div class="chart-legend" id="chartLegend"></div>
+                        </div>
+                    </div>
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Monthly Overview</h3>
+                        </div>
+                        <div class="chart-container bar-chart">
+                            <div class="bar-chart-wrapper" id="monthlyChart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="card recent-transactions">
+                    <div class="card-header">
+                        <h3>Recent Transactions</h3>
+                        <a href="#" class="view-all" data-view="transactions">View All</a>
+                    </div>
+                    <div class="transactions-list" id="recentTransactions">
+                        <!-- Transactions will be added here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions View -->
+            <section class="view" id="transactionsView">
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <select id="filterType" class="filter-select">
+                            <option value="all">All Types</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                        <select id="filterCategory" class="filter-select">
+                            <option value="all">All Categories</option>
+                        </select>
+                        <input type="month" id="filterMonth" class="filter-input">
+                    </div>
+                    <div class="filter-group">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search transactions...">
+                    </div>
+                </div>
+
+                <!-- Transactions Table -->
+                <div class="card transactions-table-card">
+                    <div class="transactions-table-wrapper">
+                        <table class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTable">
+                                <!-- Transactions will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state" id="emptyState">
+                        <i class="fas fa-receipt"></i>
+                        <h3>No transactions found</h3>
+                        <p>Add your first transaction to get started!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Add Transaction View -->
+            <section class="view" id="addView">
+                <div class="card form-card">
+                    <h2>Add New Transaction</h2>
+                    <form id="transactionForm">
+                        <div class="form-group">
+                            <label>Transaction Type</label>
+                            <div class="type-toggle">
+                                <input type="radio" name="type" id="typeExpense" value="expense" checked>
+                                <label for="typeExpense" class="type-btn expense">
+                                    <i class="fas fa-arrow-up"></i>
+                                    Expense
+                                </label>
+                                <input type="radio" name="type" id="typeIncome" value="income">
+                                <label for="typeIncome" class="type-btn income">
+                                    <i class="fas fa-arrow-down"></i>
+                                    Income
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="amount">Amount (₹)</label>
+                                <input type="number" id="amount" placeholder="0.00" min="0" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="date">Date</label>
+                                <input type="date" id="date" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" required>
+                                <!-- Categories will be populated by JS -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <input type="text" id="description" placeholder="Enter description..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Notes (Optional)</label>
+                            <textarea id="notes" placeholder="Additional notes..." rows="3"></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="cancelBtn">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Add Transaction
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Transaction</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label>Transaction Type</label>
+                    <div class="type-toggle">
+                        <input type="radio" name="editType" id="editTypeExpense" value="expense">
+                        <label for="editTypeExpense" class="type-btn expense">
+                            <i class="fas fa-arrow-up"></i>
+                            Expense
+                        </label>
+                        <input type="radio" name="editType" id="editTypeIncome" value="income">
+                        <label for="editTypeIncome" class="type-btn income">
+                            <i class="fas fa-arrow-down"></i>
+                            Income
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editAmount">Amount (₹)</label>
+                        <input type="number" id="editAmount" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDate">Date</label>
+                        <input type="date" id="editDate" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCategory">Category</label>
+                    <select id="editCategory" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editDescription">Description</label>
+                    <input type="text" id="editDescription" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelEdit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-icon warning">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2>Delete Transaction?</h2>
+            <p>This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="cancelDelete">Cancel</button>
+                <button class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
