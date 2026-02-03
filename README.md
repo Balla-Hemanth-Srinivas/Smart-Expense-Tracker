@@ -1,6 +1,7 @@
 # ExpenseFlow - Smart Expense Tracker
 
 A powerful, JavaScript-heavy expense tracking application with interactive charts and data visualization.
+
 Live Project: https://balla-hemanth-srinivas.github.io/Smart-Expense-Tracker/
 ## 📁 Files
 
